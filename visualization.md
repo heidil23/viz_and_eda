@@ -223,3 +223,126 @@ weather_df %>%
     ## Warning: Removed 15 rows containing non-finite values (stat_binhex).
 
 ![](visualization_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+Histograms
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax)) + 
+  geom_histogram()
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](visualization_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) + 
+  geom_histogram()
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](visualization_files/figure-gfm/unnamed-chunk-8-2.png)<!-- -->
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) + 
+  geom_histogram() +
+  facet_grid(. ~name)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+![](visualization_files/figure-gfm/unnamed-chunk-8-3.png)<!-- -->
+
+Let’s try some other plots…
+
+geom\_density gives a smoothed out line
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax)) + 
+  geom_density()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+![](visualization_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) + 
+  geom_density()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+![](visualization_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax, fill = name)) + 
+  geom_density(alpha = .3)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+![](visualization_files/figure-gfm/unnamed-chunk-9-3.png)<!-- -->
+
+Still with ‘tmax’ and ‘name’ box plots
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+![](visualization_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+Some people like violin plots????
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_violin()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+![](visualization_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+What about ridges…
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax, y = name)) +
+  geom_density_ridges()
+```
+
+    ## Picking joint bandwidth of 1.84
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
+
+![](visualization_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax, y = name)) +
+  geom_density_ridges(alpha = .8, scale = .8)
+```
+
+    ## Picking joint bandwidth of 1.84
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
+
+![](visualization_files/figure-gfm/unnamed-chunk-12-2.png)<!-- -->
