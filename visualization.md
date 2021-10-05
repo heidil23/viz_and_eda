@@ -180,3 +180,46 @@ weather_df %>%
 ![](visualization_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
 
 se = FALSE turns off error bars
+
+## Use data manipulation as part of this
+
+``` r
+weather_df %>% 
+  filter(name == "CentralPark_NY") %>% 
+  mutate(
+    tmax = tmax * (9/5) + 32,
+    tmin = tmin * (9/5) + 32
+  ) %>% 
+  ggplot(aes(x = date, y = tmax)) +
+  geom_point()
+```
+
+![](visualization_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+
+## Stacking geoms
+
+Which geoms do you want?
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, color = name)) +
+  geom_smooth()
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+
+![](visualization_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+Geom\_hex (requires “hexbin” package)
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmax, y = tmin)) + 
+  geom_hex()
+```
+
+    ## Warning: Removed 15 rows containing non-finite values (stat_binhex).
+
+![](visualization_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
