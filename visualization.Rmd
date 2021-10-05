@@ -67,6 +67,29 @@ weather_df %>%
   geom_point(alpha = .3) +
   geom_smooth(se = FALSE) + 
   facet_grid(. ~ name)
-
 ```
+
+Let's make one more scatterplot.
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax)) +
+  geom_point() +
+  facet_grid(. ~name)
+
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax)) +
+  geom_point(alpha = .3) +
+  facet_grid(. ~name) +
+  geom_smooth(se = FALSE)
+
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, size = prcp)) +
+  geom_point(alpha = .3) +
+  facet_grid(. ~name) +
+  geom_smooth(se = FALSE)
+```
+
+se = FALSE turns off error bars
+
 

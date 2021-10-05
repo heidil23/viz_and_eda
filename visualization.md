@@ -133,3 +133,50 @@ weather_df %>%
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
 ![](visualization_files/figure-gfm/unnamed-chunk-3-3.png)<!-- -->
+
+Let’s make one more scatterplot.
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax)) +
+  geom_point() +
+  facet_grid(. ~name)
+```
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](visualization_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax)) +
+  geom_point(alpha = .3) +
+  facet_grid(. ~name) +
+  geom_smooth(se = FALSE)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](visualization_files/figure-gfm/unnamed-chunk-4-2.png)<!-- -->
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = date, y = tmax, size = prcp)) +
+  geom_point(alpha = .3) +
+  facet_grid(. ~name) +
+  geom_smooth(se = FALSE)
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+![](visualization_files/figure-gfm/unnamed-chunk-4-3.png)<!-- -->
+
+se = FALSE turns off error bars
