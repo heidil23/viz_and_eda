@@ -1,0 +1,177 @@
+---
+title: "Data import"
+output: github_document
+---
+
+Load libraries that you will need:
+
+```{r setup}
+library(tidyverse)
+library(readxl)
+library(haven)
+```
+
+## Read in some data
+
+Read in the litters dataset.
+
+```{r}
+litters_df = read_csv("./data/FAS_litters.csv")
+litters_df = janitor::clean_names(litters_df)
+
+pups_df = read_csv("./data/FAS_pups.csv")
+pups_df = janitor::clean_names(pups_df)
+```
+
+
+## 'select'
+
+Let's select some columns.
+
+```{r}
+select(litters_df, group, litter_number)
+select(litters_df, group, gd0_weight, gd18_weight)
+
+```
+
+Colon keeps columns between two variables
+Starts with, contains
+Minus signs says every variable except that one
+Can use equal sign to rename variables or use 'rename'
+Last line relocates 'litter_number' to be the first variable, can also use relocate function
+
+```{r}
+select(litters_df, group, gd0_weight:gd_of_birth)
+select(litters_df, group, starts_with("pups"))
+select(litters_df, -litter_number)
+
+select(litters_df, GROUP = group, litter_number)
+
+rename(litters_df, GROUP = group)
+
+select(litters_df, litter_number, everything())
+
+relocate(litters_df, litter_number)
+```
+
+Using the Pups data set, select litter number, sex, PD ears
+Can use either formula here.
+
+```{r}
+pups_df
+select(pups_df, litter_number, sex, pd_ears)
+select(pups_df, litter_number:pd_ears)
+```
+
+Select just one column, pull is preferable:
+```{r}
+select(litters_df, group)
+pull(litters_df, group)
+```
+
+## 'filter' rows
+
+Let's get rid of rows ...
+
+```{r}
+filter(litters_df, gd_of_birth == 20)
+filter(litters_df, group == "Con7")
+
+filter(litters_df, gd0_weight < 21)
+filter(litters_df, gd0_weight <= 23)
+
+filter(litters_df, pups_survive != 4)
+filter(litters_df, pups_survive == 4)
+
+filter(litters_df, group != "Con7")
+
+filter(litters_df, group %in% c("Con7", "Con8"))
+#gives rows that are either Con7 or Con8
+
+filter(litters_df, group == "Con7", gd_of_birth == 20)
+#gives rows that are both Con7 and gd_of_birth 20
+
+filter(litters_df, group == "Con7" | gd_of_birth == 20)
+#gives rows that are either group = Con7 or gd_of_birth = 20
+
+drop_na(litters_df)
+#drops all rows with missing values
+
+drop_na(litters_df, gd0_weight)
+#drops rows with missing values for gd0_weight
+
+```
+
+Remember that you can view the whole data set in a separate tab using 'view(litters_df)' in the console
+
+## 'mutate'
+
+Let's add or change columns
+
+```{r}
+mutate(litters_df, weight_change = gd18_weight - gd0_weight)
+
+mutate(
+  litters_df,
+  weight_change = gd18_weight - gd0_weight,
+  group = str_to_lower(group)
+)
+litters_df
+
+```
+
+Let's rearrange the data.
+
+```{r}
+arrange(litters_df, gd_of_birth, gd0_weight)
+```
+
+## Pipes
+
+Shortcut for pipe is 'shift + command + M' for mac or 'shift + ctrl + M' for PC
+
+```{r}
+litters_data_raw = read_csv("data/FAS_litters.csv")
+litters_clean_name = janitor::clean_names(litters_data_raw)
+litters_select = select(litters_clean_name, group, pups_survive)
+litters_filtered = filter(litters_select, group == "Con7")
+
+litters_df = 
+  read_csv("data/FAS_litters.csv") %>%
+  janitor::clean_names() %>%
+  select(group, pups_survive) %>% 
+  filter(group == "Con7")
+
+litters_df = 
+  read_csv("data/FAS_litters.csv") %>%
+  janitor::clean_names() %>%
+  select(-pups_survive) %>% 
+  mutate(
+    weight_change = gd18_weight - gd0_weight,
+    group = str_to_lower(group)
+  ) %>% 
+  drop_na(weight_change) %>% 
+  filter(group %in% c("con7","con8")) %>% 
+  select(litter_number, group, weight_change, everything())
+
+```
+
+Learning assessments
+
+```{r}
+filter(pups_df, sex == 1)
+filter(pups_df, pd_walk < 11, sex == 2)
+
+mutate(
+  pups_df,
+  pd_pivot_7 = pd_pivot - 7,
+  pd_sum = pd_ears + pd_eyes + pd_pivot + pd_walk
+)
+
+pups_df =
+  read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>% 
+  janitor::clean_names() %>% 
+  filter(sex == 1) %>% 
+  select(-pd_ears) %>% 
+  mutate(pd_pivot_7_greater = pd_pivot > 6)
+```
