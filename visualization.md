@@ -374,3 +374,129 @@ weather_df %>%
     ## Warning: Removed 15 rows containing missing values (geom_point).
 
 <img src="visualization_files/figure-gfm/unnamed-chunk-14-1.png" width="90%" />
+
+## Learning Assessments
+
+``` r
+weather_df %>% 
+  filter(name == "CentralPark_NY") %>% 
+  mutate(
+    tmax = tmax * (9/5) + 32,
+    tmin = tmin * (9/5) + 32
+  ) %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point(alpha = .5) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-15-1.png" width="90%" />
+
+``` r
+ggplot(weather_df) + geom_point(aes(x = tmax, y = tmin), color = "blue")
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-16-1.png" width="90%" />
+
+``` r
+ggplot(weather_df) + geom_point(aes(x = tmax, y = tmin, color = "blue"))
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-16-2.png" width="90%" />
+
+Make plots that compare precipitation across locations. Try a histogram,
+a density plot, a boxplot, a violin plot, and a ridgeplot; use aesthetic
+mappings to make your figure readable.
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = prcp, fill = name)) + 
+  geom_histogram()
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-17-1.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = prcp, fill = name)) + 
+  geom_histogram() +
+  facet_grid(. ~name)
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_bin).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-17-2.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = prcp, fill = name)) + 
+  geom_density()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-17-3.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = prcp)) + 
+  geom_density(aes(fill = name), alpha = .5)
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-17-4.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = name, y = prcp)) +
+  geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-17-5.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = name, y = prcp)) +
+  geom_violin()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_ydensity).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-17-6.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = prcp, y = name)) +
+  geom_density_ridges(scale = .85)
+```
+
+    ## Picking joint bandwidth of 4.61
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_density_ridges).
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-17-7.png" width="90%" />
+
+``` r
+weather_df %>% 
+  filter(prcp > 0) %>% 
+  ggplot(aes(x = prcp, y = name)) + 
+  geom_density_ridges(scale = .85)
+```
+
+    ## Picking joint bandwidth of 19.7
+
+<img src="visualization_files/figure-gfm/unnamed-chunk-17-8.png" width="90%" />

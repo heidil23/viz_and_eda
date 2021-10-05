@@ -203,3 +203,62 @@ weather_df %>%
   ggplot(aes(x = tmin, y = tmax, color = name)) +
   geom_point(alpha = .3)
 ```
+
+## Learning Assessments
+
+```{r}
+weather_df %>% 
+  filter(name == "CentralPark_NY") %>% 
+  mutate(
+    tmax = tmax * (9/5) + 32,
+    tmin = tmin * (9/5) + 32
+  ) %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point(alpha = .5) +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+```{r}
+ggplot(weather_df) + geom_point(aes(x = tmax, y = tmin), color = "blue")
+ggplot(weather_df) + geom_point(aes(x = tmax, y = tmin, color = "blue"))
+```
+
+Make plots that compare precipitation across locations. Try a histogram, a density plot, a boxplot, a violin plot, and a ridgeplot; use aesthetic mappings to make your figure readable.
+
+```{r}
+weather_df %>% 
+  ggplot(aes(x = prcp, fill = name)) + 
+  geom_histogram()
+
+weather_df %>% 
+  ggplot(aes(x = prcp, fill = name)) + 
+  geom_histogram() +
+  facet_grid(. ~name)
+
+weather_df %>% 
+  ggplot(aes(x = prcp, fill = name)) + 
+  geom_density()
+
+weather_df %>% 
+  ggplot(aes(x = prcp)) + 
+  geom_density(aes(fill = name), alpha = .5)
+
+weather_df %>% 
+  ggplot(aes(x = name, y = prcp)) +
+  geom_boxplot()
+
+weather_df %>% 
+  ggplot(aes(x = name, y = prcp)) +
+  geom_violin()
+
+weather_df %>% 
+  ggplot(aes(x = prcp, y = name)) +
+  geom_density_ridges(scale = .85)
+
+weather_df %>% 
+  filter(prcp > 0) %>% 
+  ggplot(aes(x = prcp, y = name)) + 
+  geom_density_ridges(scale = .85)
+
+```
+
