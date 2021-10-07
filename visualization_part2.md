@@ -26,6 +26,7 @@ library(viridis)
 
 ``` r
 library(ggridges)
+library(patchwork)
 
 knitr::opts_chunk$set(
   fig.width = 6,
@@ -269,21 +270,113 @@ waikiki %>%
 
 ## `patchwork`
 
+Requires the patchwork library Method for displaying multiple separate
+plots at once
+
 ``` r
 ggp_tmax_tmin = 
   weather_df %>% 
   ggplot(aes(x = tmin, y = tmax, color = name)) +
-  geom_point(alpha = .3)
+  geom_point(alpha = .3) +
+  theme(legend.position = "none")
 
 ggp_prcp_dens = 
   weather_df %>% 
   filter(prcp > 0) %>% 
   ggplot(aes(x = prcp, fill = name)) +
-  geom_density(alpha = .3)
+  geom_density(alpha = .3) +
+  theme(legend.position = "none")
 
 ggp_tmax_date = 
   weather_df %>% 
   ggplot(aes(x = date, y = tmax, color = name)) +
   geom_point() +
-  geom_smooth()
+  geom_smooth() +
+  theme(legend.position = "bottom")
+
+(ggp_tmax_tmin + ggp_prcp_dens)/ ggp_tmax_date
 ```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 3 rows containing missing values (geom_point).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-5-1.png" width="90%" />
+
+## data manipulation
+
+Quick example on factor variables
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-6-1.png" width="90%" />
+
+Reorder name variable by tmax:
+
+``` r
+weather_df %>% 
+  mutate(
+    name = fct_reorder(name, tmax)
+  ) %>% 
+  ggplot(aes(x = name, y = tmax)) +
+  geom_boxplot()
+```
+
+    ## Warning: Removed 3 rows containing non-finite values (stat_boxplot).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-7-1.png" width="90%" />
+
+What about tmax and tmin… This requires transformation of the dataset
+using pivot\_longer This allows for temperature on the x-axis and fill
+with another variable
+
+``` r
+weather_df %>% 
+  pivot_longer(
+    tmax:tmin,
+    names_to = "obs",
+    values_to = "temperature"
+  ) %>% 
+  ggplot(aes(x = temperature, fill = obs)) +
+  geom_density(alpha = .3) +
+  facet_grid(.~name)
+```
+
+    ## Warning: Removed 18 rows containing non-finite values (stat_density).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-8-1.png" width="90%" />
+
+This code chunk allows for creation of a box plot showing distribution
+of bdi at each visit Therefore, you need a visit variable and a bdi
+variable
+
+``` r
+pulse_df =
+  haven::read_sas("data/public_pulse_data.sas7bdat") %>% 
+  janitor::clean_names() %>% 
+  pivot_longer(
+    bdi_score_bl:bdi_score_12m,
+    names_to = "visit",
+    values_to = "bdi",
+    names_prefix = "bdi_score_"
+  ) %>% 
+  mutate(visit = recode(visit, "bl" = "00m"))
+
+pulse_df %>% 
+  ggplot(aes(x = visit, y = bdi)) +
+  geom_boxplot()
+```
+
+    ## Warning: Removed 879 rows containing non-finite values (stat_boxplot).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-9-1.png" width="90%" />
