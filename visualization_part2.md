@@ -34,6 +34,26 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Setting options
+
+Setting options that can be included at the beginning of any R Markdown
+document We won’t load now because it will affect later examples in this
+document
+
+library(tidyverse)
+
+knitr::opts\_chunk$set( fig.width = 6, fig.asp = .6, out.width = “90%” )
+
+theme\_set(theme\_minimal() + theme(legend.position = “bottom”))
+
+options( ggplot2.continuous.colour = “viridis”, ggplot2.continuous.fill
+= “viridis” )
+
+scale\_colour\_discrete = scale\_colour\_viridis\_d
+scale\_fill\_discrete = scale\_fill\_viridis\_d
+
+## Load dataset
+
 Load in a dataset that we will use often (copied from course webiste).
 rnoaa has an online repository fo data
 
@@ -135,5 +155,72 @@ weather_df %>%
 
 <img src="visualization_part2_files/figure-gfm/unnamed-chunk-2-2.png" width="90%" />
 
-Viridis color package is very distinct visually "\_d" specifies that it
-is a discrete variable
+Viridis color palette is very distinct visually (load it in using
+package above) "\_d" specifies that it is a discrete variable
+
+## Themes
+
+Plot elements that are not directly tied to data or geometry, just might
+make the plot look nicer
+
+Note that order matters for some of these functions. If you update the
+theme to bw before you move the legend, the legend won’t move.
+
+Themes: \_bw, \_minimal, \_classic (many more available on the internet)
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point(aes(color = name), alpha = .3) +
+  labs(
+    title = "Temperature at three stations",
+    x = "Minimum daily temp (C)",
+    y = "Maximum daily temp (C)",
+    caption = "Data from rnoaa package with three stations") +
+  scale_color_viridis_d(
+    name = "Location") +
+  theme_bw() +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-3-1.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point(aes(color = name), alpha = .3) +
+  labs(
+    title = "Temperature at three stations",
+    x = "Minimum daily temp (C)",
+    y = "Maximum daily temp (C)",
+    caption = "Data from rnoaa package with three stations") +
+  scale_color_viridis_d(
+    name = "Location") +
+  theme_classic() +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-3-2.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point(aes(color = name), alpha = .3) +
+  labs(
+    title = "Temperature at three stations",
+    x = "Minimum daily temp (C)",
+    y = "Maximum daily temp (C)",
+    caption = "Data from rnoaa package with three stations") +
+  scale_color_viridis_d(
+    name = "Location") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-3-3.png" width="90%" />
