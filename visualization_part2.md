@@ -338,7 +338,8 @@ weather_df %>%
 
 What about tmax and tmin… This requires transformation of the dataset
 using pivot\_longer This allows for temperature on the x-axis and fill
-with another variable
+with another variable Remember that facet\_grid allows for creation of
+separate plots stratified by a categorical variable
 
 ``` r
 weather_df %>% 
@@ -380,3 +381,48 @@ pulse_df %>%
     ## Warning: Removed 879 rows containing non-finite values (stat_boxplot).
 
 <img src="visualization_part2_files/figure-gfm/unnamed-chunk-9-1.png" width="90%" />
+
+This creates lines for each individaul in the data set over time.
+
+``` r
+pulse_df %>% 
+  ggplot(aes(x = visit, y = bdi)) +
+  geom_point(size = .2) + 
+  geom_line(aes(group = id))
+```
+
+    ## Warning: Removed 879 rows containing missing values (geom_point).
+
+    ## Warning: Removed 515 row(s) containing missing values (geom_path).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-10-1.png" width="90%" />
+
+One more example using pups data set, studying fetal alcohol syndrome
+
+``` r
+pup_data = 
+  read_csv("./data/FAS_pups.csv", col_types = "ciiiii") %>%
+  janitor::clean_names() %>%
+  mutate(sex = recode(sex, `1` = "male", `2` = "female")) 
+
+litter_data = 
+  read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>%
+  janitor::clean_names() %>%
+  separate(group, into = c("dose", "day_of_tx"), sep = 3)
+
+fas_data = left_join(pup_data, litter_data, by = "litter_number") 
+
+fas_data %>% 
+  select(sex, dose, day_of_tx, pd_ears:pd_walk) %>% 
+  pivot_longer(
+    pd_ears:pd_walk,
+    names_to = "outcome", 
+    values_to = "pn_day") %>% 
+  drop_na() %>% 
+  mutate(outcome = forcats::fct_reorder(outcome, pn_day, median)) %>% 
+  ggplot(aes(x = dose, y = pn_day)) + 
+  geom_violin() + 
+  facet_grid(day_of_tx ~ outcome)
+```
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-11-1.png" width="90%" />
