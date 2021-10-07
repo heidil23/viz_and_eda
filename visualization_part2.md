@@ -19,6 +19,12 @@ library(tidyverse)
     ## x dplyr::lag()    masks stats::lag()
 
 ``` r
+library(viridis)
+```
+
+    ## Loading required package: viridisLite
+
+``` r
 library(ggridges)
 
 knitr::opts_chunk$set(
@@ -70,3 +76,64 @@ weather_df =
     ## date created (size, mb): 2021-10-05 10:29:34 (0.912)
 
     ## file min/max dates: 1999-09-01 / 2021-09-30
+
+Create a scatterplot and modify labels, colors, scales, etc.
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point(aes(color = name), alpha = .3) +
+  labs(
+    title = "Temperature at three stations",
+    x = "Minimum daily temp (C)",
+    y = "Maximum daily temp (C)",
+    caption = "Data from rnoaa package with three stations") +
+  scale_x_continuous(
+    breaks = c(-15, 0, 15),
+    labels = c("-15 C", "0 C", "15 C")
+  ) + 
+  scale_y_continuous(
+    trans = "sqrt",
+    position = "right"
+  ) +
+  scale_color_hue(
+    name = "Location",
+    h = c(100,300))
+```
+
+    ## Warning in self$trans$transform(x): NaNs produced
+
+    ## Warning: Transformation introduced infinite values in continuous y-axis
+
+    ## Warning: Removed 90 rows containing missing values (geom_point).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-2-1.png" width="90%" />
+
+``` r
+weather_df %>% 
+  ggplot(aes(x = tmin, y = tmax)) +
+  geom_point(aes(color = name), alpha = .3) +
+  labs(
+    title = "Temperature at three stations",
+    x = "Minimum daily temp (C)",
+    y = "Maximum daily temp (C)",
+    caption = "Data from rnoaa package with three stations") +
+  scale_x_continuous(
+    breaks = c(-15, 0, 15),
+    labels = c("-15 C", "0 C", "15 C")
+  ) + 
+  scale_color_hue(
+    name = "Location",
+    h = c(100,300)) +
+  scale_color_viridis_d()
+```
+
+    ## Scale for 'colour' is already present. Adding another scale for 'colour',
+    ## which will replace the existing scale.
+
+    ## Warning: Removed 15 rows containing missing values (geom_point).
+
+<img src="visualization_part2_files/figure-gfm/unnamed-chunk-2-2.png" width="90%" />
+
+Viridis color package is very distinct visually "\_d" specifies that it
+is a discrete variable
