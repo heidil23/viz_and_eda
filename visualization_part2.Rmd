@@ -270,7 +270,7 @@ This creates lines for each individaul in the data set over time.
 pulse_df %>% 
   ggplot(aes(x = visit, y = bdi)) +
   geom_point(size = .2) + 
-  geom_line(aes(group = id))
+  geom_line(aes(group = id), alpha = .3)
 ```
 
 One more example using pups data set, studying fetal alcohol syndrome
