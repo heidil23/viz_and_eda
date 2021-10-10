@@ -108,4 +108,32 @@ weather_df %>%
     n_days = n_distinct(date))
 ```
 
+## A digression on 2x2 tables (exposure with 2 levels, response with 2 levels)
+
+TRUE ~ "" accounts for what to do with values that are missed by the aforementioned conditions
+
+```{r}
+weather_df %>% 
+  filter(name != "Waikiki_HA") %>% 
+  mutate(
+    cold = case_when(
+      tmax < 5 ~ "cold",
+      tmax >= 5 ~ "not_cold",
+      TRUE  ~ "")
+    ) %>% 
+      group_by(name, cold) %>% 
+      summarize(count = n())
+```
+
+```{r}
+weather_df %>% 
+  filter(name != "Waikiki_HA") %>% 
+  mutate(
+    cold = case_when(
+      tmax < 5 ~ "cold",
+      tmax >= 5 ~ "not_cold",
+      TRUE  ~ "")
+    ) %>% 
+janitor::tabyl(name, cold)
+```
 
