@@ -53,16 +53,59 @@ weather_df =
 
 ## `group_by`
 
+Note that you can use ungroup to undo the grouping
 ```{r}
 weather_df %>% 
-  group_by(name, month) %>% 
-
+  group_by(name, month)
 ```
 
-You can use ungroup to undo the grouping
+## counting things
+
+count month / name observations
+summarize by naming a variable and defining a function
 ```{r}
 weather_df %>% 
+  group_by(month) %>% 
+  summarize(n_obs = n())
+
+weather_df %>% 
+  group_by(name) %>% 
+  summarize(n_obs = n())
+
+weather_df %>% 
   group_by(name, month) %>% 
-  ungroup(month)
+  summarize(n_obs = n())
 ```
+
+we can use`count()` as well if we are only counting things, does the same as above
+
+```{r}
+weather_df %>% 
+  count(month, name = "n_obs")
+
+weather_df %>% 
+  count(name, month, name = "n_obs")
+```
+
+**NEVER** use base R's `table`
+Problems: result is not a data frame, requires taking data out of a data frame
+
+```{r, eval = FALSE}
+weather_df %>% 
+  pull(month) %>% 
+  table()
+```
+
+Other helpful counters
+
+n_distinct tells you how many unique dates there are in each category 
+
+```{r}
+weather_df %>% 
+  group_by(month) %>% 
+  summarize(
+    n_obs = n(),
+    n_days = n_distinct(date))
+```
+
 
