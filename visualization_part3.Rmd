@@ -206,3 +206,54 @@ weather_df %>%
   knitr::kable(digits = 1)
 ```
 
+## `group_by` and `mutate`
+
+Centered tmax takes the tmax and subtracts the mean for that location
+```{r}
+weather_df %>% 
+  group_by(name) %>% 
+  mutate(
+    mean_tmax = mean(tmax, na.rm = TRUE),
+    centered_tmax = tmax - mean_tmax
+  ) %>% 
+  ggplot(aes(x = date, y = centered_tmax, color = name)) +
+  geom_point()
+```
+
+## Window functions
+
+ranking...
+```{r}
+weather_df %>% 
+  group_by(name, month) %>% 
+  mutate(temp_rank = min_rank(tmax)) %>% 
+  filter(temp_rank == 1)
+
+weather_df %>% 
+  group_by(name, month) %>% 
+  mutate(temp_rank = min_rank(desc(tmax)))
+```
+
+lag - shifts everything down by 1 row (or however many you specify)
+```{r}
+weather_df %>% 
+  group_by(name) %>% 
+  mutate(lag_temp = lag(tmax))
+
+weather_df %>% 
+  group_by(name) %>% 
+  mutate(lag_temp = lag(tmax, 5))
+
+weather_df %>% 
+  group_by(name) %>% 
+  mutate(temp_change = tmax - lag(tmax))
+
+weather_df %>% 
+  group_by(name) %>% 
+  mutate(temp_change = tmax - lag(tmax)) %>% 
+  summarize(
+    temp_change_max = max(temp_change, na.rm = TRUE),
+    temp_change_sd = sd(temp_change, na.rm = TRUE)
+    )
+```
+
